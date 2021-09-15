@@ -14,13 +14,12 @@
 - [Kaggle Leaderboard](https://www.kaggle.com/c/yonsei-csi6702-2021fall-project1/leaderboard)
 - [Refined Dataset - Kaggle](https://www.kaggle.com/c/yonsei-csi6702-2021fall-project1/data)
 
-### The purpose of this file
+### The purpose of this repository
 
 - Provide baseline
     - You can extend the baseline for better solution
-- Verify your submission
+- Provide submission csv file generation
     - Your submitted result(CSV file) and model(.pth file) should correspond to each other
-    - See [Verification of Submission](#verification_of_submission) section for more information
 
 ## Environment Setup
 
@@ -92,8 +91,3 @@ python inference_baseline.py
 1. Train your model with your code
 2. Edit and Run `inference_baseline.py` to generate CSV file(`submission.csv`)
 3. Upload CSV file to [Kaggle](https://www.kaggle.com/c/yonsei-csi6702-2021fall-project1/overview)
-
-## Verification of Submission
-<a id='verification_of_submission'></a>
-
-TODO
