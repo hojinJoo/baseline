@@ -1,4 +1,4 @@
-# Baseline & Verification of Submission for Project 1
+# Baseline for Project 1
 
 ## Summary
 
@@ -90,4 +90,5 @@ python inference_baseline.py
 
 1. Train your model with your code
 2. Edit and Run `inference_baseline.py` to generate CSV file(`submission.csv`)
-3. Upload CSV file to [Kaggle](https://www.kaggle.com/c/yonsei-csi6702-2021fall-project1/overview)
+3. Edit the name of CSV file(e.g. `2019324058.csv`)
+4. Upload CSV file to [Kaggle](https://www.kaggle.com/c/yonsei-csi6702-2021fall-project1/overview)
