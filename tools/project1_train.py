@@ -14,7 +14,11 @@ import os
 import copy
 from tqdm import tqdm
 
-from utils import KoreanFoodDataset
+from src.dataset.korean_food_dataset import KoreanFoodDataset
+from src.config.cfg_project1 import get_cfg_project1_default
+
+
+cfg = get_cfg_project1_default()
 
 
 def train_model(model, dataloaders, criterion, optimizer, num_epochs=25, is_inception=False):
@@ -86,7 +90,7 @@ def train_model(model, dataloaders, criterion, optimizer, num_epochs=25, is_ince
             if phase == 'val' and epoch_acc > best_acc:
                 best_acc = epoch_acc
                 best_model_wts = copy.deepcopy(model.state_dict())
-                torch.save(best_model_wts, 'baseline.pth')
+                torch.save(best_model_wts, cfg.CHECKPOINT_PATH)
             if phase == 'val':
                 val_acc_history.append(epoch_acc)
 
@@ -217,9 +221,18 @@ def main():
     print("Initializing Datasets and Dataloaders...")
 
     # Create training and validation datasets
-    image_datasets = {x: KoreanFoodDataset(f'data/{x}/{x}/{x}.json',
-                                           f'data/{x}/{x}',
-                                           data_transforms[x]) for x in ['train', 'val']}
+    image_datasets = dict(
+        train=KoreanFoodDataset(
+            cfg.TRAIN_JSON_PATH,
+            cfg.TRAIN_DATA_PATH,
+            data_transforms['train'],
+        ),
+        val=KoreanFoodDataset(
+            cfg.VALID_JSON_PATH,
+            cfg.VALID_DATA_PATH,
+            data_transforms['val'],
+        ),
+    )
     # Create training and validation dataloaders
     dataloaders_dict = {x: torch.utils.data.DataLoader(image_datasets[x], batch_size=batch_size, shuffle=True, num_workers=4) for x in ['train', 'val']}
 

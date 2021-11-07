@@ -80,32 +80,27 @@ You can download data from [Data section of Kaggle](https://www.kaggle.com/c/yon
 This is the structure of data directory
 
 ```
-(pytorch19) user@host:/projects/example-code# tree ./data
-data
+(pytorch19) user@host:/projects/example-code# tree -d ./data
+# tree -d data/korean_food_classification_data 
+data/korean_food_classification_data
 |-- test
 |   `-- test
-|       `-- test.json
-|       `-- ...
 |-- train
 |   `-- train
-|       `-- train.json
-|       `-- ...
 `-- val
     `-- val
-|       `-- val.json
-|       `-- ...
 ```
 
 #### Training
 
 ```
-python tools/train_baseline.py
+PYTHONPATH=$PYTHONPATH:. python tools/project1_train.py
 ```
 
 #### Inference
 
 ```
-python tools/inference_baseline.py
+PYTHONPATH=$PYTHONPATH:. python tools/project1_inference.py
 ```
 
 #### Submission
