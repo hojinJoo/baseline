@@ -4,7 +4,11 @@ import torch.nn as nn
 from torchvision import datasets, models, transforms
 from tqdm import tqdm
 
-from utils import KoreanFoodInferenceDataset
+from src.dataset.korean_food_dataset import KoreanFoodInferenceDataset
+from src.config.cfg_project1 import get_cfg_project1_default
+
+
+cfg = get_cfg_project1_default()
 
 
 def initialize_model(model_name, num_classes, checkpoint_path):
@@ -39,7 +43,7 @@ def main():
     # Batch size for training (change depending on how much memory you have)
     batch_size = 8
     # Initialize the model for this run
-    model, input_size = initialize_model(model_name, num_classes, checkpoint_path='baseline.pth')
+    model, input_size = initialize_model(model_name, num_classes, checkpoint_path=cfg.CHECKPOINT_PATH)
     # Print the model we just instantiated
     print(model)
     # Data augmentation and normalization for training
@@ -54,7 +58,7 @@ def main():
     }
     print("Initializing Datasets and Dataloaders...")
     # Create training and validation datasets
-    test_datasets = KoreanFoodInferenceDataset(f'data/test/test', data_transforms['test'])
+    test_datasets = KoreanFoodInferenceDataset(cfg.TEST_DATA_PATH, data_transforms['test'])
     # Create training and validation dataloaders
     test_dataloader = torch.utils.data.DataLoader(test_datasets, batch_size=batch_size, shuffle=False, num_workers=4)
     # Detect if we have a GPU available
