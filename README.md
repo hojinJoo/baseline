@@ -1,4 +1,20 @@
-# Baseline for Project 1
+# Baseline for Projects of Computer Vision with Deep Learning(CSI6072, 2021 Fall)
+
+## Table of Contents
+
+- Summary
+    - Course Information
+    - The purpose of this repository
+    - Environment Setup
+- Projects
+    - Project 2
+        - TODO
+    - Project 1
+        - Information
+        - Dataset
+        - Training
+        - Inference
+        - Submission
 
 ## Summary
 
@@ -8,22 +24,15 @@
 - Computer Vision with Deep Learning, CSI6072, (2021 Fall)
 - [Syllabus](ysweb.yonsei.ac.kr:8888/curri120601/curri_pop2.jsp?&hakno=CSI6702&bb=01&sbb=00&domain=A&startyy=2021&hakgi=2&ohak=10421)
 
-### Project 1 Information
-
-- Korean Food Classification
-- [Kaggle Leaderboard](https://www.kaggle.com/c/yonsei-csi6702-2021fall-project1/leaderboard)
-- [Refined Dataset - Kaggle](https://www.kaggle.com/c/yonsei-csi6702-2021fall-project1/data)
-
 ### The purpose of this repository
 
 - Provide baseline
     - You can extend the baseline for better solution
 - Provide submission csv file generation
     - Your submitted result(CSV file) and model(.pth file) should correspond to each other
+- Provide useful script to pre-process data
 
-## Environment Setup
-
-### Prerequisite
+### Environment Setup
 
 You can set up this part as your own if compatible
 
@@ -49,7 +58,22 @@ conda install pytorch torchvision torchaudio cudatoolkit=10.2 -c pytorch
 pip install -r requirements.txt
 ```
 
-### Dataset
+## Projects
+
+### Project 2
+
+TODO
+
+### Project 1
+
+#### Information
+
+- Korean Food Classification
+- [Kaggle Leaderboard](https://www.kaggle.com/c/yonsei-csi6702-2021fall-project1/leaderboard)
+- [Refined Dataset - Kaggle](https://www.kaggle.com/c/yonsei-csi6702-2021fall-project1/data)
+
+
+#### Dataset
 
 You can download data from [Data section of Kaggle](https://www.kaggle.com/c/yonsei-csi6702-2021fall-project1/data)
 
@@ -72,21 +96,19 @@ data
 |       `-- ...
 ```
 
-## Baseline
-
-### Training
+#### Training
 
 ```
-python train_baseline.py
+python tools/train_baseline.py
 ```
 
-### Inference
+#### Inference
 
 ```
-python inference_baseline.py
+python tools/inference_baseline.py
 ```
 
-## Submission
+#### Submission
 
 1. Train your model with your code
 2. Edit and Run `inference_baseline.py` to generate CSV file(`submission.csv`)
