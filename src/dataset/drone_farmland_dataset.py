@@ -3,7 +3,9 @@ import tifffile
 import os
 import numpy as np
 import torch
+import logging
 import pprint
+import cv2
 from torch.utils.data import Dataset
 
 
@@ -11,7 +13,7 @@ class DroneFarmlandDataset(Dataset):
 
     __version__ = 'v1.20211108'
 
-    def __init__(self, meta_json_path, root_dir, transform=None):
+    def __init__(self, cfg, meta_json_path, root_dir, transform=None):
         """
         Args:
             meta_json_path (string): Path to the meta json file with paths
@@ -19,6 +21,7 @@ class DroneFarmlandDataset(Dataset):
             transform (callable, optional): Optional transform to be applied
                 on a sample.
         """
+        self.cfg = cfg
         with open(meta_json_path, 'r') as json_file:
             self.metadata = json.load(json_file)
         self.root_dir = root_dir
@@ -35,27 +38,65 @@ class DroneFarmlandDataset(Dataset):
             image = tif.asarray()
             image = image.astype(np.float64)
             image = image - image.min()
-            image = image / image.max()
+            max_value = image.max()
+            if max_value > 0: image = image / image.max()
 
         label_path = os.path.join(self.root_dir, meta_path['label_path'])
         with tifffile.TiffFile(label_path) as tif:
             label = tif.asarray()
             label = label.astype(np.float64)
             label = label - label.min()
-            label = label / label.max()
+            max_value = label.max()
+            if max_value > 0: label = label / label.max()
         
         json_path = os.path.join(self.root_dir, meta_path['json_path'])
         with open(json_path, 'r') as json_file:
             meta_info = json.load(json_file)
         
+        # FIXME: Not utilzing full band
+        C, H, W = image.shape
+        if C > self.cfg.DATA.INPUT_BAND:
+            image = image[:self.cfg.DATA.INPUT_BAND,:,:]
+            logging.debug(f"Truncated({C}-->{self.cfg.DATA.INPUT_BAND}) image at {image_path}")
+        
+        # Generate semantic segmentation label with json information
+        C = self.cfg.DATA.SEMANTIC_CLASS
+        H, W = self.cfg.DATA.RESOLUTION
+        new_label = np.zeros((C, H, W))
+        num_semantic_class = len(meta_info['annotations'])
+        if num_semantic_class == 1:
+            semantic_class = int(meta_info['annotations'][0]['properties']['cropsid'][-3:])
+            if np.isnan(label.max()):
+                logging.debug(f"nan label at {label_path}")
+            else:
+                new_label[semantic_class,:,:] = label
+        elif num_semantic_class > 1:
+            for meta_each in meta_info['annotations']:
+                layer_polyline = np.zeros((H, W, 3))
+                polylines = meta_each['points']
+                for polyline in polylines:
+                    polyline = np.array(polyline)
+                    layer_polyline = cv2.fillPoly(layer_polyline, [polyline], (255, 255, 255))
+                semantic_class = int(meta_each['properties']['cropsid'][-3:])
+                layer_polyline = np.mean(layer_polyline, axis=-1) / 255.0
+                if np.isnan(layer_polyline.max()):
+                    logging.debug(f"nan label at {label_path}")
+                else:
+                    new_label[semantic_class,:,:] += layer_polyline
+                    new_label = np.clip(new_label, 0.0, 1.0)
+        else:
+            # FIXME: Dummy background map will be passed
+            pass
+        new_label[0,:,:] = 1 - np.sum(new_label[1:,:,:], axis=0)
+        
         if self.transform:
             image = self.transform(image)
-            label = self.transform(label)
+            new_label = self.transform(new_label)
         else:
             image = torch.Tensor(image)
-            label = torch.Tensor(label)
+            new_label = torch.Tensor(new_label)
         
-        return image, label, meta_info
+        return image, new_label
 
 
 if __name__ == '__main__':

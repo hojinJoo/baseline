@@ -1,0 +1,29 @@
+DATA:
+  NAME: 'DroneFarmlandDataset'
+  ROOT_DIR: "data/drone_farmland_semantic_segmentation"
+  TRAIN_JSON_PATH: "data/drone_farmland_semantic_segmentation/meta_train_v2.json"
+  VALID_JSON_PATH: "data/drone_farmland_semantic_segmentation/meta_valid_v2.json"
+  TEST_DIR_PATH: "data/drone_farmland_semantic_segmentation/test"
+  INPUT_BAND: 150
+  SEMANTIC_CLASS: 25
+  RESOLUTION: [128,128]
+  BATCH_SIZE: 16
+  NUM_WORKERS: 8
+  SHUFFLE: True
+  PIN_MEMORY: True
+
+MODEL:
+  ARCH: 'UNet'
+  IN_CHANNEL: 150
+  OUT_CHANNEL: 25
+
+TRAINER:
+  OPTIMIZER: 'Adam'
+  LOSS: 'mse_loss'
+  LEARNING_RATE: 1e-3
+  MAX_ITER: 15000
+  PRINT_ITER: 50
+  LR_STEP: [10000, 12000]
+  LR_GAMMA: 0.1
+
+OUTPUT_DIR: 'outputs_unet'

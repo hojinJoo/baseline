@@ -78,13 +78,36 @@ You need to download and preprocess data from [aihub](https://aihub.or.kr/aidata
 
 The desired structure of dataset is as following.
 
+![image_unzip_data](images/image_unzip_data.png)
+
 ```
 (pytorch19) user@host:/projects/examples-code# tree -d data/drone_farmland_semantic_segmentation
 data/drone_farmland_semantic_segmentation
+|-- train
+|   |-- images
+|   |   |-- Zone-A-001
+|   |   |-- Zone-A-002
+            ...
+|   |   |-- Zone-Q-002
+|   |   `-- Zone-R-002
+|   |-- jsons
+|   |   |-- Zone-A-001
+|   |   |-- Zone-A-002
+            ...
+|   |   |-- Zone-R-006
+|   |   `-- Zone-R-007
+|   `-- labels
+|       |-- Zone-A-001
+|       |-- Zone-A-002
+            ...
+|       |-- Zone-R-006
+|       `-- Zone-R-007
 `-- val
+!!!!!Do not utilize val to train model!!!!!
     |-- images
     |   |-- Zone-A-001
     |   |-- Zone-A-002
+    |   |-- Zone-A-003
     |   |   ...
     |   |-- Zone-R-006
     |   `-- Zone-R-007
@@ -101,7 +124,7 @@ data/drone_farmland_semantic_segmentation
         |-- Zone-R-006
         `-- Zone-R-007
 
-826 directories
+1410 directories
 ```
 
 - You can use `tools/project2_preprocess_data.py` to utilize this baseline framework
@@ -115,7 +138,10 @@ PYTHONPATH=$PYTHONPATH:. python tools/project2_preprocess_data.py
 #### Training
 
 ```
-PYTHONPATH=$PYTHONPATH:. python tools/project2_train.py
+PYTHONPATH=$PYTHONPATH:. python tools/project2_train.py --cfg experiment/000_unet_baseline.yaml
+PYTHONPATH=$PYTHONPATH:. python tools/project2_train.py --cfg experiment/000_unet_baseline.yaml \
+    TRAINER.LEARNING_RATE 1e-4 \
+    OUTPUT_DIR outputs_unet_small_lr
 ```
 
 #### Inference
