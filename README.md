@@ -62,7 +62,67 @@ pip install -r requirements.txt
 
 ### Project 2
 
-TODO
+#### Information
+
+- Drone Farmland Semantic Segmentation
+- [Kaggle Leaderboard - TODO]()
+- [Test Dataset - Kaggle - TODO]()
+- [Training Dataset - AIHub](https://aihub.or.kr/aidata/30725)
+
+#### Dataset
+
+You need to download and preprocess data from [aihub](https://aihub.or.kr/aidata/30725) for security reasons.
+
+- !!!!!You are not allowed to train model with 'Validation' dataset!!!!!
+- The entire 'Training' dataset is 3TB. You need to download subset of dataset if disk size is not enough.
+
+The desired structure of dataset is as following.
+
+```
+(pytorch19) user@host:/projects/examples-code# tree -d data/drone_farmland_semantic_segmentation
+data/drone_farmland_semantic_segmentation
+`-- val
+    |-- images
+    |   |-- Zone-A-001
+    |   |-- Zone-A-002
+    |   |   ...
+    |   |-- Zone-R-006
+    |   `-- Zone-R-007
+    `-- labels
+    |   |-- Zone-A-001
+    |   |-- Zone-A-002
+    |   |   ...
+    |   |-- Zone-R-006
+    |   `-- Zone-R-007
+    `-- jsons
+        |-- Zone-A-001
+        |-- Zone-A-002
+        |   ...
+        |-- Zone-R-006
+        `-- Zone-R-007
+
+826 directories
+```
+
+- You can use `tools/project2_preprocess_data.py` to utilize this baseline framework
+- Check `src/dataset/drone_farmland_dataset.py` for more information
+
+```
+PYTHONPATH=$PYTHONPATH:. python tools/project2_preprocess_data.py
+# This will generate meta.json for dataset of the framework
+```
+
+#### Training
+
+```
+PYTHONPATH=$PYTHONPATH:. python tools/project2_train.py
+```
+
+#### Inference
+
+```
+PYTHONPATH=$PYTHONPATH:. python tools/project2_inference.py
+```
 
 ### Project 1
 
@@ -80,8 +140,7 @@ You can download data from [Data section of Kaggle](https://www.kaggle.com/c/yon
 This is the structure of data directory
 
 ```
-(pytorch19) user@host:/projects/example-code# tree -d ./data
-# tree -d data/korean_food_classification_data 
+(pytorch19) user@host:/projects/example-code# tree -d data/korean_food_classification_data 
 data/korean_food_classification_data
 |-- test
 |   `-- test
