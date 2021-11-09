@@ -69,8 +69,8 @@ pip install -r requirements.txt
 #### Information
 
 - Drone Farmland Semantic Segmentation
-- [Kaggle Leaderboard - TODO]()
-- [Test Dataset - Kaggle - TODO]()
+- [Kaggle Leaderboard](https://www.kaggle.com/c/yonsei-csi6702-2021fall-project2/leaderboard)
+- [Test Dataset - Kaggle](https://www.kaggle.com/c/yonsei-csi6702-2021fall-project2/data)
 - [Training Dataset - AIHub](https://aihub.or.kr/aidata/30725)
 
 #### Dataset
@@ -172,7 +172,7 @@ PYTHONPATH=$PYTHONPATH:. python tools/project2_inference.py --cfg experiment/000
 1. Check `Training` to train model
 2. Check `Inference` to inference and generate csv at `{OUTPUT_DIR}/submission.csv`
 3. Edit the name of CSV file(e.g. `2019324058.csv`)
-4. Upload CSV file to [Kaggle](TODO)
+4. Upload CSV file to [Kaggle](https://www.kaggle.com/c/yonsei-csi6702-2021fall-project2/overview)
 
 ### Project 1
 
