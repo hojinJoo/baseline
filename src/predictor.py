@@ -28,7 +28,10 @@ class DefaultPredictor(object):
 
         self.model = self.model.cuda()
         self.model.eval()
-        pred_all = []
+
+        csvfile = open(str(self.test_csv_p), 'w', newline='\n')
+        writer = csv.writer(csvfile)
+        writer.writerow(["Id", "Predicted"])
         for image, image_id in tqdm(test_dataloader, desc='Predict'):
 
             with torch.no_grad():
@@ -43,22 +46,13 @@ class DefaultPredictor(object):
                 Visualizer.save_multi_channel_as_png(image[b:b+1,:,:,:].detach().cpu(), vis_image_path)
                 vis_pred_path = str(self.test_dir_p / f"{image_id[b]}_pred.png")
                 Visualizer.save_multi_channel_as_png(output[b:b+1,:,:,:].detach().cpu(), vis_pred_path)
-                pred_row = dict(
-                    image_id=image_id[b],
-                )
                 label = pred[b,:,:]
                 H, W = label.shape
                 for i in range(H):
                     for j in range(W):
-                        key = f"{i:03d}_{j:03d}"
+                        key = f"{image_id[b]}_{i:03d}_{j:03d}"
                         value = label[i,j].item()
-                        pred_row[key] = value
-                pred_all.append(pred_row)
+                        writer.writerow([key, value])
+        csvfile.close()
         
-        with open(str(self.test_csv_p), 'w', newline='\n') as csvfile:
-            writer = csv.writer(csvfile)
-            writer.writerow(pred_all[0].keys())
-            for pred_row in pred_all:
-                writer.writerow(pred_row.values())
-
         
