@@ -42,7 +42,7 @@ class DefaultPredictor(object):
                 vis_image_path = str(self.test_dir_p / f"{image_id[b]}.png")
                 Visualizer.save_multi_channel_as_png(image[b:b+1,:,:,:].detach().cpu(), vis_image_path)
                 vis_pred_path = str(self.test_dir_p / f"{image_id[b]}_pred.png")
-                Visualizer.save_multi_channel_as_png(pred[b:b+1,None,:,:].detach().cpu(), vis_pred_path)
+                Visualizer.save_multi_channel_as_png(output[b:b+1,:,:,:].detach().cpu(), vis_pred_path)
                 pred_row = dict(
                     image_id=image_id[b],
                 )
