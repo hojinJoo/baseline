@@ -19,6 +19,11 @@ class DefaultTrainer(object):
 
         self.cfg = cfg
         self.model = get_model(cfg)
+
+        if self.cfg.TRAINER.RESUME:
+            state_dict = torch.load(self.cfg.MODEL.WEIGHTS)
+            self.model.load_state_dict(state_dict)
+
         self.global_iter = 0
 
         self.write_dir_p = (Path(self.cfg.OUTPUT_DIR) / self.cfg.SUMMARY_DIR)
@@ -115,8 +120,6 @@ class DefaultTrainer(object):
             correct_all.append(correct)
             correct_ratio_all.append(correct_ratio)
             batch_cnt += B
-
-            if batch_cnt > 10: break
         
         correct_all = torch.cat(correct_all, dim=0)
         torch.save(correct_all.detach().cpu(), str(Path(self.cfg.OUTPUT_DIR) / "correct.pth"))

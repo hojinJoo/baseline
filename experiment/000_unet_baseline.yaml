@@ -14,6 +14,7 @@ DATA:
 
 MODEL:
   ARCH: 'UNet'
+  WEIGHTS: 'checkpoints/unet_model_final.pth'
   IN_CHANNEL: 150
   OUT_CHANNEL: 25
 

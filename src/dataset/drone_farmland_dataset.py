@@ -6,6 +6,7 @@ import torch
 import logging
 import pprint
 import cv2
+from pathlib import Path
 from torch.utils.data import Dataset
 
 
@@ -13,25 +14,62 @@ class DroneFarmlandDataset(Dataset):
 
     __version__ = 'v1.20211108'
 
-    def __init__(self, cfg, meta_json_path, root_dir, transform=None):
+    def __init__(self, cfg, meta_json_path, root_dir, transform=None, inference=False):
         """
         Args:
             meta_json_path (string): Path to the meta json file with paths
             root_dir (string): Directory with images, labels, json files
             transform (callable, optional): Optional transform to be applied
                 on a sample.
+            inference (bool): If True, provide input only
         """
         self.cfg = cfg
-        with open(meta_json_path, 'r') as json_file:
-            self.metadata = json.load(json_file)
         self.root_dir = root_dir
         self.transform = transform
+        self.inference = inference
+        if not self.inference:
+            with open(meta_json_path, 'r') as json_file:
+                self.metadata = json.load(json_file)
+        else:
+            self.metadata = []
+            for image_path in list(sorted(list(Path(self.root_dir).iterdir()))):
+                self.metadata.append(
+                    dict(
+                        image_path=image_path,
+                    )
+                )
+        self.length = len(self.metadata)
     
     def __len__(self):
-        return len(self.metadata)
+        return self.length
     
     def __getitem__(self, idx):
 
+        if self.inference:
+
+            meta_path = self.metadata[idx]
+            image_path = meta_path['image_path']
+            with tifffile.TiffFile(image_path) as tif:
+                image = tif.asarray()
+                image = image.astype(np.float64)
+                image = image - image.min()
+                max_value = image.max()
+                if max_value > 0: image = image / image.max()
+            
+            # FIXME: Not utilzing full band
+            C, H, W = image.shape
+            if C > self.cfg.DATA.INPUT_BAND:
+                image = image[:self.cfg.DATA.INPUT_BAND,:,:]
+                logging.debug(f"Truncated({C}-->{self.cfg.DATA.INPUT_BAND}) image at {image_path}")
+        
+            if self.transform:
+                image = self.transform(image)
+            else:
+                image = torch.Tensor(image)
+            
+            image_id = Path(image_path).stem
+            return image, str(image_id)
+        
         meta_path = self.metadata[idx]
         image_path = os.path.join(self.root_dir, meta_path['image_path'])
         with tifffile.TiffFile(image_path) as tif:

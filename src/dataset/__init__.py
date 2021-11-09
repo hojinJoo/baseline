@@ -40,6 +40,13 @@ def get_dataloader(cfg, phase='train', transform=None):
             cfg.DATA.ROOT_DIR,
             transform,
         )
+    elif phase == 'test':
+        dataset = dataset_cls(
+            cfg,
+            None,
+            cfg.DATA.TEST_DIR_PATH,
+            inference=True,
+        )
     else:
         raise ValueError(f"The value of phase({phase}) should be one of ['train', 'valid']")
 

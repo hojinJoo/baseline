@@ -137,17 +137,30 @@ PYTHONPATH=$PYTHONPATH:. python tools/project2_preprocess_data.py
 
 #### Training
 
+Many options are available. Check `src/config/cfg_project2.py` for more information.
+
+You can extend other options by adding other classes to the package like `src.losses`, `src.models`.
+
+Finally, you can edit `src/trainer.py` for a more complicated learning scheme like contrastive learning.
+
 ```
 PYTHONPATH=$PYTHONPATH:. python tools/project2_train.py --cfg experiment/000_unet_baseline.yaml
 PYTHONPATH=$PYTHONPATH:. python tools/project2_train.py --cfg experiment/000_unet_baseline.yaml \
     TRAINER.LEARNING_RATE 1e-4 \
     OUTPUT_DIR outputs_unet_small_lr
+PYTHONPATH=$PYTHONPATH:. python tools/project2_train.py --cfg experiment/000_unet_baseline.yaml \
+    TRAINER.LOSS dice_loss \
+    OUTPUT_DIR outputs_unet_dice
+PYTHONPATH=$PYTHONPATH:. python tools/project2_train.py --cfg experiment/000_unet_baseline.yaml \
+    TRAINER.RESUME True \
+    MODEL.WEIGHTS outputs_unet/model_final.pth \
+    OUTPUT_DIR outputs_unet_resume
 ```
 
 #### Inference
 
 ```
-PYTHONPATH=$PYTHONPATH:. python tools/project2_inference.py
+PYTHONPATH=$PYTHONPATH:. python tools/project2_inference.py --cfg experiment/000_unet_baseline.yaml
 ```
 
 ### Project 1
