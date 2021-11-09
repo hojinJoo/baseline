@@ -26,6 +26,8 @@ class DefaultTrainer(object):
 
         self.global_iter = 0
 
+        self.checkpoint_path_p = (Path(self.cfg.OUTPUT_DIR) / self.cfg.CHECKPOINT_PATH)
+
         self.write_dir_p = (Path(self.cfg.OUTPUT_DIR) / self.cfg.SUMMARY_DIR)
         self.write_dir_p.mkdir(parents=True, exist_ok=True)
         self.writer = SummaryWriter(str(self.write_dir_p))
@@ -92,9 +94,11 @@ class DefaultTrainer(object):
                     label_path = str(self.vis_dir_p / f"iter_{self.global_iter}_label.png")
                     Visualizer.save_multi_channel_as_png(label.detach().cpu(), label_path)
 
-                    torch.save(self.model.state_dict(), str(Path(self.cfg.OUTPUT_DIR) / self.cfg.CHECKPOINT_PATH))
+                    torch.save(self.model.state_dict(), str(self.checkpoint_path_p))
 
                 self.global_iter += 1
+                if self.global_iter > self.cfg.TRAINER.MAX_ITER:
+                    break
 
     def valid(self):
 

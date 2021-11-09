@@ -8,7 +8,11 @@
     - Environment Setup
 - Projects
     - Project 2
-        - TODO
+        - Information
+        - Dataset
+        - Training
+        - Inference
+        - Submission
     - Project 1
         - Information
         - Dataset
@@ -162,6 +166,13 @@ PYTHONPATH=$PYTHONPATH:. python tools/project2_train.py --cfg experiment/000_une
 ```
 PYTHONPATH=$PYTHONPATH:. python tools/project2_inference.py --cfg experiment/000_unet_baseline.yaml
 ```
+
+#### Submission
+
+1. Check `Training` to train model
+2. Check `Inference` to inference and generate csv at `{OUTPUT_DIR}/submission.csv`
+3. Edit the name of CSV file(e.g. `2019324058.csv`)
+4. Upload CSV file to [Kaggle](TODO)
 
 ### Project 1
 

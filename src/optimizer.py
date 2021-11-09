@@ -10,6 +10,9 @@ OPTIM_DICT = dict(
 
 
 def get_optim_and_scheduler(cfg, parameters):
+    """
+    NOTE: Currently only supporting MultiStepLR
+    """
 
     optim = None
     for k, v in OPTIM_DICT.items():

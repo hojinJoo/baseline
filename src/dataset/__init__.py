@@ -21,7 +21,7 @@ def get_dataset(cfg):
 
 def get_dataloader(cfg, phase='train', transform=None):
     """
-    NOTE: This function is highly entangled with dataset class
+    NOTE: This function is highly entangled with DroneFamlandDataset class
     """
 
     dataset_cls = get_dataset(cfg)
