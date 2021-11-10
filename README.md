@@ -31,7 +31,7 @@
 ### The purpose of this repository
 
 - Provide baseline
-    - You can extend the baseline for better solution
+    - You can extend the baseline for a better solution
 - Provide submission csv file generation
     - Your submitted result(CSV file) and model(.pth file) should correspond to each other
 - Provide useful script to pre-process data
@@ -50,7 +50,7 @@ torchaudio==0.9.0a0+33b2469
 torchvision==0.10.0
 ```
 
-The recommended way is as following
+The recommended way is as follows
 
 1. Install [Miniconda](https://docs.conda.io/en/latest/miniconda.html)
 2. Run following commands
@@ -72,21 +72,24 @@ pip install -r requirements.txt
 - [Kaggle Leaderboard](https://www.kaggle.com/c/yonsei-csi6702-2021fall-project2/leaderboard)
 - [Test Dataset - Kaggle](https://www.kaggle.com/c/yonsei-csi6702-2021fall-project2/data)
 - [Training Dataset - AIHub](https://aihub.or.kr/aidata/30725)
+- Check kaggle overview for more information(e.g. What is hyspectral image and tif format?)
 
 #### Dataset
 
 You need to download and preprocess data from [aihub](https://aihub.or.kr/aidata/30725) for security reasons.
 
-- !!!!!You are not allowed to train model with 'Validation' dataset!!!!!
-- The entire 'Training' dataset is 3TB. You need to download subset of dataset if disk size is not enough.
+- !!!!!You are not allowed to train the model with 'Validation' dataset!!!!!
+- !!!Being approved and downloading the data could take some time, so start right now!!!
+- The entire 'Training' dataset is 3TB. You need to download a subset of the dataset if disk size is not enough.
 
-The desired structure of dataset is as following.
+The desired structure of the dataset is as follows.
 
 ![image_unzip_data](images/image_unzip_data.png)
 
 ```
 (pytorch19) user@host:/projects/examples-code# tree -d data/drone_farmland_semantic_segmentation
 data/drone_farmland_semantic_segmentation
+|-- test
 |-- train
 |   |-- images
 |   |   |-- Zone-A-001
@@ -106,33 +109,13 @@ data/drone_farmland_semantic_segmentation
             ...
 |       |-- Zone-R-006
 |       `-- Zone-R-007
-`-- val
-!!!!!Do not utilize val to train model!!!!!
-    |-- images
-    |   |-- Zone-A-001
-    |   |-- Zone-A-002
-    |   |-- Zone-A-003
-    |   |   ...
-    |   |-- Zone-R-006
-    |   `-- Zone-R-007
-    `-- labels
-    |   |-- Zone-A-001
-    |   |-- Zone-A-002
-    |   |   ...
-    |   |-- Zone-R-006
-    |   `-- Zone-R-007
-    `-- jsons
-        |-- Zone-A-001
-        |-- Zone-A-002
-        |   ...
-        |-- Zone-R-006
-        `-- Zone-R-007
+`-- val: !!!!!Do not utilize val to train model!!!!!
 
-1410 directories
+1411 directories
 ```
 
-- You can use `tools/project2_preprocess_data.py` to utilize this baseline framework
-- Check `src/dataset/drone_farmland_dataset.py` for more information
+- You can use `tools/project2_preprocess_data.py` to generate 'meta.json' with data paths for the baseline framework
+- `meta.json` file will be used in `src/dataset/drone_farmland_dataset.py` for more information
 
 ```
 PYTHONPATH=$PYTHONPATH:. python tools/project2_preprocess_data.py
@@ -141,11 +124,11 @@ PYTHONPATH=$PYTHONPATH:. python tools/project2_preprocess_data.py
 
 #### Training
 
-Many options are available. Check `src/config/cfg_project2.py` for more information.
+Many options are available. Check `src/config/cfg_project2.py` and `experiment/000_unet_baseline.yaml` for more information.
 
 You can extend other options by adding other classes to the package like `src.losses`, `src.models`.
 
-Finally, you can edit `src/trainer.py` for a more complicated learning scheme like contrastive learning.
+Also you can edit `src/trainer.py` for a more complicated learning scheme.
 
 ```
 PYTHONPATH=$PYTHONPATH:. python tools/project2_train.py --cfg experiment/000_unet_baseline.yaml
@@ -170,7 +153,7 @@ PYTHONPATH=$PYTHONPATH:. python tools/project2_inference.py --cfg experiment/000
 #### Submission
 
 1. Check `Training` to train model
-2. Check `Inference` to inference and generate csv at `{OUTPUT_DIR}/submission.csv`
+2. Check `Inference` to inference test data and generate csv at `{OUTPUT_DIR}/submission.csv`
 3. Edit the name of CSV file(e.g. `2019324058.csv`)
 4. Upload CSV file to [Kaggle](https://www.kaggle.com/c/yonsei-csi6702-2021fall-project2/overview)
 
